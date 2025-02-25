@@ -146,11 +146,11 @@ class Tree
           # no right child
           if cursor_explorer_smallest.right == nil
             cursor.data = cursor_explorer_smallest.data
-            cursor_explorer_smallest_parent.left = nil # always left, we only traversed left
+            cursor_explorer_smallest_parent.right = nil # always rigth, we are as far left as possible (smallest)
           # 1 right child
           else
             cursor.data = cursor_explorer_smallest.data
-            cursor_explorer_smallest_parent.left = cursor_explorer_smallest.right
+            cursor_explorer_smallest_parent.right = cursor_explorer_smallest.right
           end
         end
       end
@@ -161,8 +161,7 @@ class Tree
 
 end
 
-test_array1 = [0, 1, 2, 3, 4, 5, 6, 7]
-test_array2 = [0, 5 , 10, 15, 20, 25, 30, 35, 40]
+test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
 # t1 = Tree.new(test_array1)
 # t.pretty_print
 # p t.root
@@ -170,7 +169,7 @@ test_array2 = [0, 5 , 10, 15, 20, 25, 30, 35, 40]
 t2 = Tree.new(test_array2)
 puts "\n\n"
 
-t2.insert(90)
+# t2.insert(90)
 # t2.insert(1)
 # t2.insert(4)
 # t2.insert(751)
@@ -178,8 +177,6 @@ t2.insert(90)
 # t2.insert(755)
 # t2.insert(50000)
 # t2.insert(2)
-t2.delete(0)
-t2.insert(0)
-t2.insert(85)
-t2.delete(20)
+# t2.delete(5)
+# t2.delete(9999)
 t2.pretty_print
