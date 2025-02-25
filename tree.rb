@@ -159,6 +159,26 @@ class Tree
     return cursor
   end
 
+  # find method accepts a value and returns the node with the given value
+  def find(value)
+
+    if root.nil?
+      return nil
+    end
+
+    cursor = root
+    while cursor != nil
+      if value < cursor.data
+        cursor = cursor.left
+      elsif value > cursor.data
+        cursor = cursor.right
+      elsif value == cursor.data
+        return cursor
+      end
+    end
+    return nil
+  end
+
 end
 
 test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
@@ -179,4 +199,5 @@ puts "\n\n"
 # t2.insert(2)
 # t2.delete(5)
 # t2.delete(9999)
-t2.pretty_print
+p t2.find(30)
+p t2.find(48392)
