@@ -21,6 +21,9 @@ class Tree
  
 
   def build_tree(array)
+    # sort array / eliminate duplicates
+    array = array.uniq.sort
+    
     # base case is array.length == 1??? or array.length == 0???
     if array.length == 0
       return root
@@ -45,12 +48,138 @@ class Tree
     end
     
   end
+
+  # Write an #insert and #delete method which accepts a value to insert / delete
+  # You'll have to deal with several cases for delete, such as when a node has children or not
+  # Traverse the tree, do not modify the input array
+  # Initialize current node with root node
+  # left if key is less than or equal to the current node value
+  # right if greater than current node value
+  # repeat until leaf node reached
+  # attach new key as left or right based on comparison
+  def insert(value)
+    new_node = Node.new(value)
+    cursor = root
+    
+    # empty tree?
+    if @root == nil
+      @root = new_node
+    end
+    while cursor != nil
+      if value > cursor.data
+        if cursor.right == nil
+          cursor.right = new_node
+          return new_node
+        else  
+          cursor = cursor.right
+        end
+      elsif value < cursor.data
+        if cursor.left == nil
+          cursor.left = new_node
+        else
+          cursor = cursor.left
+        end
+      else
+        return
+      end
+    end
+  end
+
+  def delete(value)
+    # empty tree
+    if @root.nil?
+      return nil
+    end
+
+    cursor = root
+    ## tree traversal
+    while cursor != nil
+      if value < cursor.data
+        cursor_parent = cursor
+        cursor = cursor.left
+      elsif value > cursor.data
+        cursor_parent = cursor
+        cursor = cursor.right
+      elsif value == cursor.data
+        # found the value we are looking for
+        # target node has no children
+        if cursor.left == nil && cursor.right == nil
+          if cursor.data < cursor_parent.data
+            cursor_parent.left = nil
+            return cursor
+          else
+            cursor_parent.right = nil
+            return cursor
+          end
+        # target node has 1 child
+        elsif cursor.left != nil && cursor.right == nil || cursor.left == nil && cursor.right != nil
+          # child is left
+          if cursor.left != nil
+            if cursor.data < cursor_parent.data
+              cursor_parent.left = cursor.left
+            else
+              cursor_parent.right = cursor.left
+            end
+          # child is right
+          else 
+            if cursor.data < cursor_parent.data
+              cursor_parent.left = cursor.right
+            else
+              cursor_parent.right = cursor.right
+            end
+          end
+      # target node has 2 children
+      # inorder successor will be the smallest node that is larger than node
+      # this means: 1 step right (needs to be larger), and then traverse the tree until we find the smallest of the largest
+        else
+          # 1 step right
+          cursor_explorer_smallest_parent = cursor
+          cursor_explorer_smallest = cursor.right
+          while cursor_explorer_smallest.left != nil
+            cursor_explorer_smallest_parent = cursor_explorer_smallest
+            cursor_explorer_smallest = cursor_explorer_smallest.left
+          end
+          # at the end of this loop, cursor_explorer_smallest should be pointing to the smallest node
+          # smallest should be the new value of the target node, 
+          # and we should remove the pointer from the parent of smallest
+          # smallest has no children or 1 right children (no other options, it's the smallest so no left children possible)
+          # no right child
+          if cursor_explorer_smallest.right == nil
+            cursor.data = cursor_explorer_smallest.data
+            cursor_explorer_smallest_parent.left = nil # always left, we only traversed left
+          # 1 right child
+          else
+            cursor.data = cursor_explorer_smallest.data
+            cursor_explorer_smallest_parent.left = cursor_explorer_smallest.right
+          end
+        end
+      end
+    end
+    ## tree traversal completed
+    return cursor
+  end
+
 end
 
-test_array = [0, 1, 2, 3, 4, 5, 6, 7]
-t = Tree.new(test_array)
-t.pretty_print
-puts t.root
-puts t.root.left.data
-puts t.root.right.data
+test_array1 = [0, 1, 2, 3, 4, 5, 6, 7]
+test_array2 = [0, 5 , 10, 15, 20, 25, 30, 35, 40]
+# t1 = Tree.new(test_array1)
+# t.pretty_print
+# p t.root
 
+t2 = Tree.new(test_array2)
+puts "\n\n"
+
+t2.insert(90)
+# t2.insert(1)
+# t2.insert(4)
+# t2.insert(751)
+# t2.insert(752)
+# t2.insert(755)
+# t2.insert(50000)
+# t2.insert(2)
+t2.delete(0)
+t2.insert(0)
+t2.insert(85)
+t2.delete(20)
+t2.pretty_print
