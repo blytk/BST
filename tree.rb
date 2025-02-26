@@ -206,6 +206,61 @@ class Tree
     values_array
   end
 
+  # #inorder, #preorder, #postorder methods that accept a block, each method should traverse the tree in their respective depth-first order
+  # and yield each node to the provided block. Return array of values if no block is given
+  
+  # inorder -> left, root, right
+  def inorder(node = root, values = [], &block)
+    # base case
+    if node.nil?
+      return values
+    end
+    # recursive case
+    # left
+    inorder(node.left, values, &block)
+    # root
+    values << node.data
+    if block_given?
+      yield node
+    end
+    # right
+    inorder(node.right, values, &block)
+    values
+  end
+
+  # preorder -> root, left right
+  def preorder(node = root, values = [], &block)
+    # base case
+    return values if node.nil?
+    
+    # recursive case
+    # root
+    values << node.data
+    yield node if block_given?
+    # left
+    preorder(node.left, values, &block)
+    # right
+    preorder(node.right, values, &block)
+    values
+  end
+
+  # postorder -> left, right, root
+  def postorder(node = root, values = [], &block)
+    # base case
+    return values if node.nil?
+    # recursive case
+    # left
+    postorder(node.left, values, &block)
+    # right
+    postorder(node.right, values, &block)
+    # root
+    values << node.data
+    yield node if block_given?
+
+    values
+  end
+
+  # Height method accepts a node and returns its height. Height is defined as the number of edges in longest path from a given node to a leaf node
 end
 
 test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
@@ -228,7 +283,10 @@ t2 = Tree.new(test_array2)
 # p t2.find(30)
 # p t2.find(48392)
 # level_order test no block given
-p t2.level_order
-# level_order test, block given
-t2.level_order { |node| puts node}
+# p t2.level_order
+# # level_order test, block given
+# t2.level_order { |node| puts node}
+#p t2.inorder { |node| puts "visited node with data: #{node.data}"}
+#p t2.preorder { |node| puts "visited node with data: #{node.data}"}
+p t2.postorder { |node| puts "visited node with data: #{node.data}"}
 # p t2.pretty_print
