@@ -179,6 +179,33 @@ class Tree
     return nil
   end
 
+  # level_order accepts a block. The method should traverse the tree in breadth-first level order
+  # and yield each node to the provided block (iteration or recursion)
+  # should return an array of values if no block is given
+  # use an array acting as a queue to keep track of all the child nodes that you have yet to traverse
+  # and to add new ones on the list
+  def level_order
+    queue = []
+    values_array = []
+    # start at the root node
+    queue << root
+    while queue.length > 0 
+      # Operating on the first item of the queue     
+      # queue all children 
+      queue << queue[0].left unless queuBeside[0].left.nil?
+      queue << queue[0].right unless queue[0].right.nil?
+      # dequeue node and yield to potential block if appropriate
+      if block_given?
+        values_array << queue[0].data
+        yield queue.shift
+      else
+        # if no block given, we return an array of node values
+        values_array << queue.shift.data
+      end
+    end
+    values_array
+  end
+
 end
 
 test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
@@ -187,7 +214,6 @@ test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
 # p t.root
 
 t2 = Tree.new(test_array2)
-puts "\n\n"
 
 # t2.insert(90)
 # t2.insert(1)
@@ -199,5 +225,10 @@ puts "\n\n"
 # t2.insert(2)
 # t2.delete(5)
 # t2.delete(9999)
-p t2.find(30)
-p t2.find(48392)
+# p t2.find(30)
+# p t2.find(48392)
+# level_order test no block given
+p t2.level_order
+# level_order test, block given
+t2.level_order { |node| puts node}
+# p t2.pretty_print
