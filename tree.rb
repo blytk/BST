@@ -192,7 +192,7 @@ class Tree
     while queue.length > 0 
       # Operating on the first item of the queue     
       # queue all children 
-      queue << queue[0].left unless queuBeside[0].left.nil?
+      queue << queue[0].left unless queue[0].left.nil?
       queue << queue[0].right unless queue[0].right.nil?
       # dequeue node and yield to potential block if appropriate
       if block_given?
@@ -260,7 +260,44 @@ class Tree
     values
   end
 
-  # Height method accepts a node and returns its height. Height is defined as the number of edges in longest path from a given node to a leaf node
+  # height method accepts a node and returns its height. 
+  # Height is defined as the number of edges in longest path from a given node to a leaf node
+  def height(node = root)
+    if node.nil?
+      return -1
+    else
+      left_height = height(node.left)
+      right_height = height(node.right)
+
+      if left_height > right_height
+        return left_height + 1
+      else
+        return right_height + 1
+      end
+    end
+  
+  end
+
+  # depth method accepts a node and returns its depth. Depth is defined as the number of edges in path from a given node
+  # to the tree's root node
+  def depth(node, current = @root, depth = 0)
+    return -1 if current.nil? || node.nil?
+
+    return depth if current == node
+
+    if node.data < current.data
+      depth(node, current.left, depth + 1) 
+    else
+      depth(node, current.right, depth + 1)
+    end
+  end
+
+  # write a #balanced? method that checks if the tree is balanced. A balanced tree is one where the difference between heights
+  # of the left and right subtrees of every node is not more than 1
+  def balanced?
+    
+  end
+
 end
 
 test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
@@ -288,5 +325,7 @@ t2 = Tree.new(test_array2)
 # t2.level_order { |node| puts node}
 #p t2.inorder { |node| puts "visited node with data: #{node.data}"}
 #p t2.preorder { |node| puts "visited node with data: #{node.data}"}
-p t2.postorder { |node| puts "visited node with data: #{node.data}"}
-# p t2.pretty_print
+# p t2.postorder { |node| puts "visited node with data: #{node.data}"}
+p t2.pretty_print
+# p t2.height(t2.find(40))
+p t2.depth(t2.find(40))
