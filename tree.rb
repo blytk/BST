@@ -295,37 +295,65 @@ class Tree
   # write a #balanced? method that checks if the tree is balanced. A balanced tree is one where the difference between heights
   # of the left and right subtrees of every node is not more than 1
   def balanced?
-    
+    return nil if root.nil?
+    # height of left subtree
+    left_height = height(root.left)
+    # height of right subtree
+    right_height = height(root.right)
+    # difference > 1?
+    if left_height - right_height > 1 || left_height - right_height < -1
+      false
+    else
+      true
+    end
+  end
+
+  # write a #rebalance method which rebalances an unbalanced tree
+  # Tip: use a traversal method to provide a new array to the #build_tree method
+  def rebalance
+    return nil if root.nil?
+    # inorder depth first traversal should return an ordered array. Does it matter? NO
+    node_array = self.inorder
+    new_tree = Tree.new(node_array)
+    self.root = new_tree.root
   end
 
 end
 
-test_array2 = [0, 5, 10, 15, 20, 25, 30, 35, 40]
-# t1 = Tree.new(test_array1)
-# t.pretty_print
-# p t.root
+# test_array = [40, 5, 15, 30, 0, 35, 10, 25, 20]
 
-t2 = Tree.new(test_array2)
+# Test
 
-# t2.insert(90)
-# t2.insert(1)
-# t2.insert(4)
-# t2.insert(751)
-# t2.insert(752)
-# t2.insert(755)
-# t2.insert(50000)
-# t2.insert(2)
-# t2.delete(5)
-# t2.delete(9999)
-# p t2.find(30)
-# p t2.find(48392)
-# level_order test no block given
-# p t2.level_order
-# # level_order test, block given
-# t2.level_order { |node| puts node}
-#p t2.inorder { |node| puts "visited node with data: #{node.data}"}
-#p t2.preorder { |node| puts "visited node with data: #{node.data}"}
-# p t2.postorder { |node| puts "visited node with data: #{node.data}"}
-p t2.pretty_print
-# p t2.height(t2.find(40))
-p t2.depth(t2.find(40))
+# 1. Create a binary search tree from an array of random numbers
+t = Tree.new(Array.new(15) { rand(1..100) })
+t.pretty_print
+
+# 2. Confirm that the tree is balanced by calling #balanced?
+p t.balanced?
+
+# 3. Print out all elements in level, pre, post, and in order
+p t.level_order
+p t.preorder
+p t.postorder
+p t.inorder
+
+# 4. Unbalance the tree by adding several numbers > 100
+t.insert(105)
+t.insert(278)
+t.insert(1050)
+t.insert(57800)
+t.insert(100000000000)
+# 5. Confirm that the tree is unbalanced by calling #balanced?
+p t.balanced?
+# 6. Balance the tree by calling #rebalance
+t.rebalance
+# 7. Confirm that the tree is balanced by calling #balanced?
+p t.balanced?
+# 8. Print out all elements in level, pre, post, and in order
+p t.level_order
+p t.preorder
+p t.postorder
+p t.inorder
+
+t.pretty_print
+
